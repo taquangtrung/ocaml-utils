@@ -1,0 +1,9 @@
+# build files
+_build/
+build/
+
+# binary files
+*.o
+*.out
+*.byte
+*.native
