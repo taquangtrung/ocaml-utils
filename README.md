@@ -2,12 +2,12 @@ ocaml-extcore
 ===================
 
 This project is a collection of extra useful OCaml functions and libraries,
-which is implemented on top of the Core library of Jane Street.
+which is implemented on top of the OCaml Core standard library of Jane Street.
 
 # Installation
 
-- Install f
+- Install `ocaml-extcore` by running the following command:
 
   ```
-  opam pin add libs-extra git://github.com/taquangtrung/ocaml-extcore.git
+  opam pin add extcore git://github.com/taquangtrung/ocaml-extcore.git
   ```
