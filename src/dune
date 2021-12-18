@@ -3,4 +3,4 @@
 (library
  (name extcore)
  (public_name extcore)
- (libraries core))
+ (libraries core num))
