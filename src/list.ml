@@ -1,8 +1,8 @@
 (********************************************************************
- * This file is part of the ocaml-extcore, a collection of extra
- * useful OCaml functions and libraries, implemented on top of Core.
+ * This file is part of ocaml-extcore, an extended library of the
+ * OCaml Core standard library with additionally useful functions.
  *
- * Author: Ta Quang Trung.
+ * Copyright (c) 2021 Ta Quang Trung.
  ********************************************************************)
 
 open Core
@@ -12,10 +12,6 @@ open Core
  *******************************************************************)
 
 module List = struct
-  (*------------------------------
-   * New functions handling list
-   *-----------------------------*)
-
   let not_empty (l : 'a list) : bool =
     match l with
     | [] -> false
@@ -171,6 +167,10 @@ module List = struct
         if return res then res else compute nlst in
     compute lst
   ;;
+
+  (*------------------------------------
+   * Include the existing List library
+   *-----------------------------------*)
 
   include List
 end

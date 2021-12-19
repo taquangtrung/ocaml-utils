@@ -1,8 +1,8 @@
 (********************************************************************
- * This file is part of the ocaml-extcore, a collection of extra
- * useful OCaml functions and libraries, implemented on top of Core.
+ * This file is part of ocaml-extcore, an extended library of the
+ * OCaml Core standard library with additionally useful functions.
  *
- * Author: Ta Quang Trung.
+ * Copyright (c) 2021 Ta Quang Trung.
  ********************************************************************)
 
 open Core

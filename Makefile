@@ -1,4 +1,4 @@
-.PHONY: build clean test install uninstall doc
+.PHONY: build clean test install uninstall doc format
 
 build:
 	dune build @install
@@ -17,3 +17,7 @@ clean:
 
 doc:
 	dune build @doc
+
+format:
+	-dune build @fmt
+	dune promote

@@ -1,8 +1,8 @@
 (********************************************************************
- * This file is part of the ocaml-extcore, a collection of extra
- * useful OCaml functions and libraries, implemented on top of Core.
+ * This file is part of ocaml-extcore, an extended library of the
+ * OCaml Core standard library with additionally useful functions.
  *
- * Author: Ta Quang Trung.
+ * Copyright (c) 2021 Ta Quang Trung.
  ********************************************************************)
 
 open Core
@@ -21,11 +21,13 @@ module String = struct
   let is_infix ~(infix : string) (str : string) : bool =
     let idxs = String.substr_index_all ~may_overlap:false ~pattern:infix str in
     let len, sublen = String.length str, String.length infix in
-    List.exists ~f:(fun idx -> idx > 0 && idx < len - sublen) idxs
+    List.exists
+      ~f:(fun idx -> Int.( > ) idx 0 && Int.( < ) idx (len - sublen))
+      idxs
   ;;
 
   let strip_newline (str : string) : string =
-    String.strip ~drop:(fun c -> Char.(=) c '\n') str
+    String.strip ~drop:(fun c -> Char.( = ) c '\n') str
   ;;
 
   let prefix_if_not_empty (s : string) ~(prefix : string) : string =
@@ -50,7 +52,7 @@ module String = struct
 
   let count_indent (str : string) : int =
     let str = String.lstrip ~drop:(fun c -> Char.equal c '\n') str in
-    let index = String.lfindi ~f:(fun _ c -> Char.(<>) c ' ') str in
+    let index = String.lfindi ~f:(fun _ c -> Char.( <> ) c ' ') str in
     match index with
     | None -> 0
     | Some i -> i
@@ -80,7 +82,7 @@ module String = struct
 
   (** auto-insert indentation to align_line with the prefix string *)
   let align_line (prefix : string) (msg : string) : string =
-    let prefix = String.strip ~drop:(fun c -> Char.(=) c '\n') prefix in
+    let prefix = String.strip ~drop:(fun c -> Char.( = ) c '\n') prefix in
     let indentation = String.length prefix in
     let skipfirst = not (String.is_suffix ~suffix:"\n" prefix) in
     prefix ^ indent ~skipfirst indentation msg
@@ -98,9 +100,9 @@ module String = struct
     |> String.concat ~sep:"\n"
   ;;
 
-  (*-------------------------------------
+  (*--------------------------------------
    * Include the existing String library
-   *------------------------------------*)
+   *-------------------------------------*)
 
-  include String
+  include Core.String
 end
