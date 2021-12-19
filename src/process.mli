@@ -14,9 +14,6 @@ type process =
     proc_err_channel : in_channel
   }
 
-val pid_dummy : int
-val mk_proc_dummy : string list -> process
-
 (*** Handle input/output *)
 
 val read_output : process -> string

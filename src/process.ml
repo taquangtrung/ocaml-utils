@@ -19,18 +19,6 @@ type process =
     proc_err_channel : In_channel.t
   }
 
-let pid_dummy = -1000
-
-let mk_proc_dummy (cmd : string list) : process =
-  { proc_exe = Option.value (List.hd cmd) ~default:"";
-    proc_cmd = cmd;
-    proc_pid = pid_dummy;
-    proc_in_channel = In_channel.stdin;
-    proc_out_channel = Out_channel.stdout;
-    proc_err_channel = In_channel.stdin
-  }
-;;
-
 let open_process cmd : In_channel.t * Out_channel.t * In_channel.t * int =
   let in_read, in_write = Unix.pipe () in
   let out_read, out_write = Unix.pipe () in
