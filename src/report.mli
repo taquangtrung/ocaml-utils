@@ -9,7 +9,7 @@
 
 val hide_warning_message : bool ref
 val warning : string -> unit
-val hwarning : string -> ('a -> string) -> 'a -> unit
+val warningh : string -> ('a -> string) -> 'a -> unit
 
 (** Report warning using format template similar to [printf] *)
 val warningf
@@ -20,7 +20,7 @@ val warningf
 
 val hide_error_log : bool ref
 val error : ?log:string -> string -> 't
-val herror : ?log:string -> string -> ('a -> string) -> 'a -> 't
+val errorh : ?log:string -> string -> ('a -> string) -> 'a -> 't
 
 (** Report error using format template similar to [printf] *)
 val errorf

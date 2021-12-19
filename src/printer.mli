@@ -97,7 +97,7 @@ val println
   string ->
   unit
 
-val hprint
+val printh
   :  ?header:bool ->
   ?ruler:[< `Long | `Medium | `None | `Short > `None ] ->
   ?indent:int ->
@@ -114,7 +114,7 @@ val hprint
 
 val nprint : 'a -> unit
 val nprintln : 'a -> unit
-val nhprint : 'a -> 'b -> unit
+val nprinth : 'a -> 'b -> unit
 
 
 (*** Wrapping OCam printing functions ***)

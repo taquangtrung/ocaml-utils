@@ -224,7 +224,7 @@ let println
 ;;
 
 (** high-order print a message *)
-let hprint
+let printh
     ?(header = false)
     ?(ruler = `None)
     ?(indent = 0)
@@ -243,4 +243,4 @@ let hprint
 
 let nprint _ = ()
 let nprintln _ = ()
-let nhprint _ _ = ()
+let nprinth _ _ = ()
