@@ -9,9 +9,9 @@ type process =
   { proc_exe : string;
     proc_cmd : string list;
     proc_pid : int;
-    proc_in_channel : in_channel;
-    proc_out_channel : out_channel;
-    proc_err_channel : in_channel
+    proc_in_channel : Core.In_channel.t;
+    proc_out_channel : Core.Out_channel.t;
+    proc_err_channel : Core.In_channel.t
   }
 
 (*** Handle input/output *)
@@ -22,7 +22,7 @@ val send_input : process -> string -> unit
 
 (*** Start, stop processes ***)
 
-val open_process : string list -> in_channel * out_channel * in_channel * int
+val open_process : string list -> Core.In_channel.t * Core.Out_channel.t * Core.In_channel.t * int
 val start_process : string list -> process
 val close_process : process -> unit
 val restart_process : process -> process
