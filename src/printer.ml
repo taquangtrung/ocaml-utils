@@ -1,8 +1,8 @@
 (********************************************************************
- * This file is part of the source code analyzer Discover.
+ * This file is part of ocaml-extcore, an extended library of the
+ * OCaml Core standard library with additionally useful functions.
  *
- * Copyright (c) 2020-2021 Singapore Blockchain Innovation Programme.
- * All rights reserved.
+ * Copyright (c) 2021 Ta Quang Trung.
  ********************************************************************)
 
 (* Printer module *)

@@ -66,11 +66,9 @@ module Sys = struct
     | _ ->
       (match Sys.is_directory dirname with
       | `No ->
-        print_endline
-          (("'" ^ dirname ^ "' is an regular file. ")
-          ^ "Discover needs to use this name to work.\n"
-          ^ "Please remove or rename it to continue.\n");
-        exit 0
+        failwith
+          ("Failed to make dir: " ^ dirname ^ "."
+         ^ "A regular file of the same name already exists.")
       | _ -> ())
   ;;
 

@@ -1,15 +1,13 @@
 (********************************************************************
- * This file is part of the source code analyzer Discover.
+ * This file is part of ocaml-extcore, an extended library of the
+ * OCaml Core standard library with additionally useful functions.
  *
- * Copyright (c) 2020-2021 Singapore Blockchain Innovation Programme.
- * All rights reserved.
+ * Copyright (c) 2021 Ta Quang Trung.
  ********************************************************************)
-
 
 (*** Reporting warning  ***)
 
 val hide_warning_message : bool ref
-
 val warning : string -> unit
 val hwarning : string -> ('a -> string) -> 'a -> unit
 
@@ -21,7 +19,6 @@ val warningf
 (*** Reporting errors ***)
 
 val hide_error_log : bool ref
-
 val error : ?log:string -> string -> 't
 val herror : ?log:string -> string -> ('a -> string) -> 'a -> 't
 
