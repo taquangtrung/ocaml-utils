@@ -181,7 +181,7 @@ let print_core
             let indent = String.count_indent prefix + 2 + indent in
             str_marker ^ prefix ^ String.indent indent msg)
           else if String.length prefix > 12
-                  && String.exists ~f:(fun c -> Char.(=) c '\n') msg
+                  && String.exists ~f:(fun c -> Char.( = ) c '\n') msg
           then (
             let indent = String.count_indent prefix + 2 + indent in
             str_marker ^ prefix ^ "\n" ^ String.indent indent msg)
@@ -240,6 +240,8 @@ let printh
   print_core ~header ~ruler ~indent ~prefix ~always ~enable ~marker ~autoformat
     msg
 ;;
+
+(* let printf *)
 
 let nprint _ = ()
 let nprintln _ = ()

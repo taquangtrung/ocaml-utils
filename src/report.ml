@@ -23,12 +23,13 @@ let warning (msg : string) : unit =
 ;;
 
 (** High-order print a warning message *)
-let warningh (msg : string) (f : 'a -> string) (x : 'a) : unit =
-  warning (msg ^ f x)
+let warningh (prefix : string) (f : 'a -> string) (x : 'a) : unit =
+  let msg = prefix ^ f x in
+  warning msg
 ;;
 
 (** Print a warning message using output format template similar to printf. *)
-let warningf fmt =
+let warningf (fmt : ('a, Out_channel.t, unit, unit, unit, unit) format6) : 'a =
   let _ = print_string "[warning] " in
   let kwprintf k o (FB.Format (fmt, _)) =
     FM.make_printf (fun acc -> FM.output_acc o acc; k o) FM.End_of_acc fmt
@@ -56,14 +57,18 @@ let error ?(log = "") (msg : string) : 't =
 ;;
 
 (** High-order report an error message and exit the program. *)
-let errorh ?(log = "") (msg : string) (f : 'a -> string) (x : 'a) : 't =
-  let msg = msg ^ f x in
+let errorh ?(log = "") (prefix : string) (f : 'a -> string) (x : 'a) : 't =
+  let msg = prefix ^ f x in
   error ~log msg
 ;;
 
 (** Report error using output format template similar to printf,
     and exit the program. *)
-let errorf ?(log = "") fmt =
+let errorf
+    ?(log = "")
+    (fmt : ('a, Out_channel.t, unit, unit, unit, unit) format6)
+    : 'a
+  =
   let _ = print_string "ERROR: " in
   let keprintf k o (FB.Format (fmt, _)) =
     let print_error_and_exit o acc =
