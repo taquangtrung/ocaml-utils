@@ -7,8 +7,6 @@
 
 open Core
 open Extcore__String
-open Extcore__Printer
-open Extcore__Report
 
 type process =
   { proc_exe : string;
@@ -102,16 +100,19 @@ let restart_process proc : process =
   start_process proc.proc_cmd
 ;;
 
-let run_command (cmd : string list) : unit =
+let run_command (cmd : string list) : (unit, string) result =
   let proc = start_process cmd in
   match Unix.waitpid (Pid.of_int proc.proc_pid) with
-  | Ok _ -> close_process proc
-  | Error _ ->
-    (* let msg = string_of_sexp (Unix.Exit_or_signal.sexp_of_error e) in *)
-    let msg = read_error proc in
+  | Ok _ ->
     let _ = close_process proc in
-    let cmd = beautiful_concat ~column:80 ~sep:" " cmd in
-    error ~log:msg ("Failed to run external command:\n\n" ^ String.indent 2 cmd)
+    Ok ()
+  | Error e ->
+    let output = read_output proc in
+    let error = read_error proc in
+    let exn = string_of_sexp (Unix.Exit_or_signal.sexp_of_error e) in
+    let log = String.concat_if_not_empty ~sep:"\n" [ output; error; exn ] in
+    let _ = close_process proc in
+    Error log
 ;;
 
 (** Run a command and get output. The output can be:

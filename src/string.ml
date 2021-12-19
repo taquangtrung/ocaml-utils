@@ -46,6 +46,10 @@ module String = struct
     if String.is_empty s then replacer else s
   ;;
 
+  let concat_if_not_empty (strs: string list) ~(sep: string) : string =
+    let strs = List.filter ~f:not_empty strs in
+    String.concat ~sep strs
+
   (*-----------------------
    * Formatting string
    *----------------------*)
