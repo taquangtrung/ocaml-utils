@@ -60,6 +60,7 @@ val pr_items
   :  ?bullet:string ->
   ?obrace:string ->
   ?cbrace:string ->
+  ?sep:string ->
   ?extra:string ->
   f:('a -> string) ->
   'a list ->

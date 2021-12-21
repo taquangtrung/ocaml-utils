@@ -81,6 +81,7 @@ let pr_items
     ?(bullet = "-")
     ?(obrace = "")
     ?(cbrace = "")
+    ?(sep = "\n")
     ?(extra = "")
     ~(f : 'a -> string)
     (xs : 'a list)
@@ -93,7 +94,7 @@ let pr_items
     let pr s =
       let res = String.indent ~skipfirst:true indent s in
       bullet ^ " " ^ res in
-    "\n" ^ pr_list ~sep:"\n" ~obrace ~cbrace ~extra ~f:pr xs)
+    "\n" ^ pr_list ~sep ~obrace ~cbrace ~extra ~f:pr xs)
 ;;
 
 let pr_args ~(f : 'a -> string) (args : 'a list) : string =
