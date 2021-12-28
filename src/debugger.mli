@@ -35,7 +35,7 @@ val debug
   string ->
   unit
 
-val debugh
+val hdebug
   :  ?header:bool ->
   ?ruler:[< `Long | `Medium | `None | `Short > `None ] ->
   ?indent:int ->
@@ -59,7 +59,7 @@ val ddebug
   string ->
   unit
 
-val ddebugh
+val hddebug
   :  ?header:bool ->
   ?ruler:[< `Long | `Medium | `None | `Short > `None ] ->
   ?indent:int ->
@@ -74,8 +74,8 @@ val ddebugh
 (*** disable debugging ***)
 
 val ndebug : 'a -> unit
-val ndebugh : 'a -> 'b -> 'c -> unit
-val nddebugh : 'a -> 'b -> 'c -> unit
+val nhdebug : 'a -> 'b -> 'c -> unit
+val nhddebug : 'a -> 'b -> 'c -> unit
 
 (*** interactive debugging ***)
 

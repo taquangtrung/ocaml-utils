@@ -171,7 +171,7 @@ let ddebug
 (*** higher order debugging printer ***)
 
 (** high-order print a mode_debug message *)
-let debugh
+let hdebug
     ?(header = false)
     ?(ruler = `None)
     ?(indent = 0)
@@ -190,7 +190,7 @@ let debugh
 ;;
 
 (** high-order print a deep mode_debug message *)
-let ddebugh
+let hddebug
     ?(header = false)
     ?(ruler = `None)
     ?(indent = 0)
@@ -209,8 +209,8 @@ let ddebugh
 (*** disable debugging printers ***)
 
 let ndebug _ = ()
-let ndebugh _ _ _ = ()
-let nddebugh _ _ _ = ()
+let nhdebug _ _ _ = ()
+let nhddebug _ _ _ = ()
 
 (*******************************************************************
  ** Interactive debugging

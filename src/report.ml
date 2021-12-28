@@ -23,7 +23,7 @@ let warning (msg : string) : unit =
 ;;
 
 (** High-order print a warning message *)
-let warningh (prefix : string) (f : 'a -> string) (x : 'a) : unit =
+let hwarning (prefix : string) (f : 'a -> string) (x : 'a) : unit =
   let msg = prefix ^ f x in
   warning msg
 ;;
@@ -57,7 +57,7 @@ let error ?(log = "") (msg : string) : 't =
 ;;
 
 (** High-order report an error message and exit the program. *)
-let errorh ?(log = "") (prefix : string) (f : 'a -> string) (x : 'a) : 't =
+let herror ?(log = "") (prefix : string) (f : 'a -> string) (x : 'a) : 't =
   let msg = prefix ^ f x in
   error ~log msg
 ;;
