@@ -27,6 +27,7 @@ module BInt : sig
   val mult : bint -> bint -> bint
   val mult_int_bint : int -> bint -> bint
   val div : bint -> bint -> bint
+  val div_cstyle : bint -> bint -> bint
   val pow_int_positive_int : int -> int -> bint
   val compute_lower_bound_two_complement : int -> bint
   val compute_upper_bound_two_complement : int -> bint
@@ -56,6 +57,7 @@ module EInt : sig
   val mult_bint_eint : bint -> eint -> eint
   val mult : eint -> eint -> eint
   val div : eint -> eint -> eint
+  val div_cstyle : eint -> eint -> eint
   val compute_lower_bound_two_complement : int -> eint
   val compute_upper_bound_two_complement : int -> eint
   val compute_range_two_complement : int -> eint * eint

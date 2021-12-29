@@ -117,6 +117,5 @@ val nprint : 'a -> unit
 val nprintln : 'a -> unit
 val nhprint : 'a -> 'b -> unit
 
-
-(*** Wrapping OCam printing functions ***)
+(*** Wrapping OCaml printing functions ***)
 val sprintf : ('a, unit, string) format -> 'a
