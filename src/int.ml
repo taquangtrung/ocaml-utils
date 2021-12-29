@@ -55,6 +55,8 @@ module BInt = struct
     then neg (div x (neg y))
     else if ((compare x zero = -1) && (compare y zero = 1))
     then neg (div (neg x) y)
+    else if ((compare x zero = -1) && (compare y zero = -1))
+    then div (neg x) (neg y)
     else div x y
   ;;
 
