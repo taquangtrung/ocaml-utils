@@ -50,12 +50,12 @@ module BInt = struct
   let pow_int_positive_int = Big_int.power_int_positive_int
 
   (** Division by C/C++ Standard, rounding towards zero *)
-  let cstyle_div (x : bint) (y : bint) : bint =
-    if (compare x zero = 1) && (compare y zero = -1)
+  let div_cstyle (x : bint) (y : bint) : bint =
+    if compare x zero = 1 && compare y zero = -1
     then neg (div x (neg y))
-    else if ((compare x zero = -1) && (compare y zero = 1))
+    else if compare x zero = -1 && compare y zero = 1
     then neg (div (neg x) y)
-    else if ((compare x zero = -1) && (compare y zero = -1))
+    else if compare x zero = -1 && compare y zero = -1
     then div (neg x) (neg y)
     else div x y
   ;;
@@ -200,9 +200,9 @@ module EInt = struct
     res
   ;;
 
-  let cstyle_div (x : eint) (y : eint) : eint =
+  let div_cstyle (x : eint) (y : eint) : eint =
     let bx, by = to_bint x, to_bint y in
-    let q = BInt.cstyle_div bx by in
+    let q = BInt.div_cstyle bx by in
     let res = [], q in
     res
   ;;
