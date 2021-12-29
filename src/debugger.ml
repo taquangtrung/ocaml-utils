@@ -78,50 +78,50 @@ let restore_mode_debug () : unit =
 
 (** core mode_debug function *)
 let debug_core
+    ?(mtype = "debug")
     ?(header = false)
     ?(ruler = `None)
     ?(prefix = "")
     ?(indent = 0)
-    ?(marker = "debug")
     ?(enable = true)
     (print_msg : unit -> string)
   =
   if enable
   then (
     let msg = print_msg () in
-    let str_marker =
-      if String.is_empty marker then "" else "[" ^ marker ^ "] " in
+    let str_msg_type =
+      if String.is_empty mtype then "" else "[" ^ mtype ^ "] " in
     let msg =
       if header
       then (
         let prefix = String.suffix_if_not_empty prefix ~suffix:"\n" in
-        "\n" ^ String.make 68 '*' ^ "\n" ^ str_marker ^ prefix ^ msg)
+        "\n" ^ String.make 68 '*' ^ "\n" ^ str_msg_type ^ prefix ^ msg)
       else (
         match ruler with
         | `Long ->
           let ruler = String.make 68 '*' ^ "\n" in
-          "\n" ^ ruler ^ "\n" ^ str_marker ^ prefix ^ msg
+          "\n" ^ ruler ^ "\n" ^ str_msg_type ^ prefix ^ msg
         | `Medium ->
           let ruler = String.make 36 '*' in
-          "\n" ^ ruler ^ "\n" ^ str_marker ^ prefix ^ msg
+          "\n" ^ ruler ^ "\n" ^ str_msg_type ^ prefix ^ msg
         | `Short ->
           let ruler = String.make 21 '-' in
-          "\n" ^ ruler ^ "\n" ^ str_marker ^ prefix ^ msg
+          "\n" ^ ruler ^ "\n" ^ str_msg_type ^ prefix ^ msg
         | `None ->
-          let msg = if String.not_empty marker then msg else msg in
+          let msg = if String.not_empty mtype then msg else msg in
           if String.is_prefix ~prefix:"\n" msg
              || (String.length prefix > 1
                 && String.is_suffix ~suffix:"\n" prefix)
           then (
             let indent = String.count_indent prefix + 2 + indent in
-            str_marker ^ prefix ^ String.indent indent msg)
+            str_msg_type ^ prefix ^ String.indent indent msg)
           else if String.length prefix > 12 && String.is_infix ~infix:"\n" msg
           then (
             let indent = String.count_indent prefix + 2 + indent in
-            str_marker ^ prefix ^ "\n" ^ String.indent indent msg)
+            str_msg_type ^ prefix ^ "\n" ^ String.indent indent msg)
           else
-            String.indent indent (String.align_line (str_marker ^ prefix) msg))
-    in
+            String.indent indent
+              (String.align_line (str_msg_type ^ prefix) msg)) in
     print_endline msg)
   else ()
 ;;
@@ -130,12 +130,12 @@ let debug_core
 
 (** print a message *)
 let debug
+    ?(mtype = "debug")
     ?(header = false)
     ?(ruler = `None)
     ?(indent = 0)
     ?(always = false)
     ?(enable = true)
-    ?(marker = "debug")
     (msg : string)
     : unit
   =
@@ -145,7 +145,7 @@ let debug
   let prefix =
     if not (Core.phys_equal ruler `None)
     then ""
-    else if String.not_empty marker
+    else if String.not_empty mtype
     then ""
     else "\n" in
   debug_core ~header ~ruler ~indent ~enable ~prefix (fun () -> msg)
@@ -155,30 +155,30 @@ let debug
 
 (** print a deep mode_debug message *)
 let ddebug
+    ?(mtype = "debug")
     ?(header = false)
     ?(ruler = `None)
     ?(indent = 0)
     ?(always = false)
     ?(enable = true)
-    ?(marker = "debug")
     (msg : string)
     : unit
   =
   let enable = enable && (not !no_debug) && (!mode_deep_debug || always) in
   let printer () = msg in
-  debug_core ~header ~ruler ~indent ~enable ~prefix:msg ~marker printer
+  debug_core ~header ~ruler ~indent ~enable ~prefix:msg ~mtype printer
 ;;
 
 (*** higher order debugging printer ***)
 
 (** high-order print a mode_debug message *)
 let hdebug
+    ?(mtype = "debug")
     ?(header = false)
     ?(ruler = `None)
     ?(indent = 0)
     ?(always = false)
     ?(enable = true)
-    ?(marker = "debug")
     (msg : string)
     (pr : 'a -> string)
     (data : 'a)
@@ -187,24 +187,24 @@ let hdebug
     enable && (not !no_debug) && (!mode_debug || !mode_deep_debug || always)
   in
   let printer () = pr data in
-  debug_core ~header ~ruler ~indent ~enable ~prefix:msg ~marker printer
+  debug_core ~header ~ruler ~indent ~enable ~prefix:msg ~mtype printer
 ;;
 
 (** high-order print a deep mode_debug message *)
 let hddebug
+    ?(mtype = "debug")
     ?(header = false)
     ?(ruler = `None)
     ?(indent = 0)
     ?(always = false)
     ?(enable = true)
-    ?(marker = "debug")
     (msg : string)
     (pr : 'a -> string)
     (data : 'a)
   =
   let enable = enable && (not !no_debug) && (!mode_deep_debug || always) in
   let printer () = pr data in
-  debug_core ~header ~ruler ~indent ~enable ~marker ~prefix:msg printer
+  debug_core ~header ~ruler ~indent ~enable ~mtype ~prefix:msg printer
 ;;
 
 (*** disable debugging printers ***)

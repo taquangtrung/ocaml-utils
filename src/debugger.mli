@@ -26,22 +26,22 @@ val restore_mode_debug : unit -> unit
 (*** shallow debugging ***)
 
 val debug
-  :  ?header:bool ->
+  :  ?mtype:string ->
+  ?header:bool ->
   ?ruler:[< `Long | `Medium | `None | `Short > `None ] ->
   ?indent:int ->
   ?always:bool ->
   ?enable:bool ->
-  ?marker:string ->
   string ->
   unit
 
 val hdebug
-  :  ?header:bool ->
+  :  ?mtype:string ->
+  ?header:bool ->
   ?ruler:[< `Long | `Medium | `None | `Short > `None ] ->
   ?indent:int ->
   ?always:bool ->
   ?enable:bool ->
-  ?marker:string ->
   string ->
   ('a -> string) ->
   'a ->
@@ -50,22 +50,22 @@ val hdebug
 (*** deep debugging ***)
 
 val ddebug
-  :  ?header:bool ->
+  :  ?mtype:string ->
+  ?header:bool ->
   ?ruler:[< `Long | `Medium | `None | `Short > `None ] ->
   ?indent:int ->
   ?always:bool ->
   ?enable:bool ->
-  ?marker:string ->
   string ->
   unit
 
 val hddebug
-  :  ?header:bool ->
+  :  ?mtype:string ->
+  ?header:bool ->
   ?ruler:[< `Long | `Medium | `None | `Short > `None ] ->
   ?indent:int ->
   ?always:bool ->
   ?enable:bool ->
-  ?marker:string ->
   string ->
   ('a -> string) ->
   'a ->

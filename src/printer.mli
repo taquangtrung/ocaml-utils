@@ -77,34 +77,34 @@ val beautiful_format_on_char : sep:char -> ?column:int -> string -> string
 (*** Printing ***)
 
 val print
-  :  ?header:bool ->
+  :  ?mtype:string ->
+  ?header:bool ->
   ?ruler:[< `Long | `Medium | `None | `Short > `None ] ->
   ?indent:int ->
   ?always:bool ->
   ?enable:bool ->
-  ?marker:string ->
   ?autoformat:bool ->
   string ->
   unit
 
 val println
-  :  ?header:bool ->
+  :  ?mtype:string ->
+  ?header:bool ->
   ?ruler:[< `Long | `Medium | `None | `Short > `None ] ->
   ?indent:int ->
   ?always:bool ->
   ?enable:bool ->
-  ?marker:string ->
   ?autoformat:bool ->
   string ->
   unit
 
 val hprint
-  :  ?header:bool ->
+  :  ?mtype:string ->
+  ?header:bool ->
   ?ruler:[< `Long | `Medium | `None | `Short > `None ] ->
   ?indent:int ->
   ?always:bool ->
   ?enable:bool ->
-  ?marker:string ->
   ?autoformat:bool ->
   string ->
   ('a -> string) ->

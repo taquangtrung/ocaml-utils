@@ -146,12 +146,12 @@ let beautiful_format_on_char ~(sep : char) ?(column = 80) (str : string) =
 
 (** core printing function *)
 let print_core
+    ?(mtype = "info")
     ?(header = false)
     ?(ruler = `None)
     ?(prefix = "")
     ?(indent = 0)
     ?(always = false)
-    ?(marker = "info")
     ?(enable = true)
     ?(autoformat = true)
     msg
@@ -159,20 +159,21 @@ let print_core
   =
   if ((not !no_print) && enable) || always
   then (
-    let str_marker =
-      if String.is_empty marker then "" else "[" ^ marker ^ "] " in
+    let str_msg_type =
+      if String.is_empty mtype then "" else "[" ^ mtype ^ "] " in
     let msg =
       if header
       then (
         let msg = if String.is_empty msg then msg else "\n\n" ^ msg ^ "\n\n" in
-        "\n" ^ String.make 68 '*' ^ "\n" ^ str_marker ^ prefix ^ msg)
+        "\n" ^ String.make 68 '*' ^ "\n" ^ str_msg_type ^ prefix ^ msg)
       else (
         match ruler with
-        | `Long -> "\n" ^ String.make 68 '*' ^ "\n" ^ str_marker ^ prefix ^ msg
+        | `Long ->
+          "\n" ^ String.make 68 '*' ^ "\n" ^ str_msg_type ^ prefix ^ msg
         | `Medium ->
-          "\n" ^ String.make 36 '=' ^ "\n" ^ str_marker ^ prefix ^ msg
+          "\n" ^ String.make 36 '=' ^ "\n" ^ str_msg_type ^ prefix ^ msg
         | `Short ->
-          "\n" ^ String.make 21 '-' ^ "\n" ^ str_marker ^ prefix ^ msg
+          "\n" ^ String.make 21 '-' ^ "\n" ^ str_msg_type ^ prefix ^ msg
         | `None ->
           if not autoformat
           then msg
@@ -181,65 +182,65 @@ let print_core
                      && String.is_suffix ~suffix:"\n" prefix)
           then (
             let indent = String.count_indent prefix + 2 + indent in
-            str_marker ^ prefix ^ String.indent indent msg)
+            str_msg_type ^ prefix ^ String.indent indent msg)
           else if String.length prefix > 12
                   && String.exists ~f:(fun c -> Char.( = ) c '\n') msg
           then (
             let indent = String.count_indent prefix + 2 + indent in
-            str_marker ^ prefix ^ "\n" ^ String.indent indent msg)
+            str_msg_type ^ prefix ^ "\n" ^ String.indent indent msg)
           else
-            String.indent indent (String.align_line (str_marker ^ prefix) msg))
-    in
+            String.indent indent
+              (String.align_line (str_msg_type ^ prefix) msg)) in
     print_endline msg)
   else ()
 ;;
 
 (** print a message *)
 let print
+    ?(mtype = "info")
     ?(header = false)
     ?(ruler = `None)
     ?(indent = 0)
     ?(always = false)
     ?(enable = true)
-    ?(marker = "info")
     ?(autoformat = true)
     (msg : string)
     : unit
   =
-  print_core ~header ~ruler ~indent ~always ~enable ~marker ~autoformat msg
+  print_core ~header ~ruler ~indent ~always ~enable ~mtype ~autoformat msg
 ;;
 
 (** print a message and a newline character *)
 let println
+    ?(mtype = "info")
     ?(header = false)
     ?(ruler = `None)
     ?(indent = 0)
     ?(always = false)
     ?(enable = true)
-    ?(marker = "info")
     ?(autoformat = true)
     (msg : string)
     : unit
   =
   let msg = msg ^ "\n" in
-  print_core ~header ~ruler ~indent ~always ~enable ~marker ~autoformat msg
+  print_core ~header ~ruler ~indent ~always ~enable ~mtype ~autoformat msg
 ;;
 
 (** high-order print a message *)
 let hprint
+    ?(mtype = "info")
     ?(header = false)
     ?(ruler = `None)
     ?(indent = 0)
     ?(always = false)
     ?(enable = true)
-    ?(marker = "info")
     ?(autoformat = true)
     (prefix : string)
     (f : 'a -> string)
     (v : 'a)
   =
   let msg = f v in
-  print_core ~header ~ruler ~indent ~prefix ~always ~enable ~marker ~autoformat
+  print_core ~header ~ruler ~indent ~prefix ~always ~enable ~mtype ~autoformat
     msg
 ;;
 
