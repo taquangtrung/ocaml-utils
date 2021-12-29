@@ -49,6 +49,15 @@ module BInt = struct
   let div = Big_int.div_big_int
   let pow_int_positive_int = Big_int.power_int_positive_int
 
+  (** Division by C/C++ Standard, rounding towards zero *)
+  let cstyle_div (x : bint) (y : bint) : bint =
+    if (compare x zero = 1) && (compare y zero = -1)
+    then neg (div x (neg y))
+    else if ((compare x zero = -1) && (compare y zero = 1))
+    then neg (div (neg x) y)
+    else div x y
+  ;;
+
   (*** two complement number ***)
 
   let compute_lower_bound_two_complement (bitwidth : int) : bint =
@@ -186,6 +195,13 @@ module EInt = struct
     let bx, by = to_bint x, to_bint y in
     let c = BInt.div bx by in
     let res = [], c in
+    res
+  ;;
+
+  let cstyle_div (x : eint) (y : eint) : eint =
+    let bx, by = to_bint x, to_bint y in
+    let q = BInt.cstyle_div bx by in
+    let res = [], q in
     res
   ;;
 
