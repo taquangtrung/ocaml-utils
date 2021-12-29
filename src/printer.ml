@@ -151,7 +151,7 @@ let print_core
     ?(prefix = "")
     ?(indent = 0)
     ?(always = false)
-    ?(marker = true)
+    ?(marker = "info")
     ?(enable = true)
     ?(autoformat = true)
     msg
@@ -159,7 +159,8 @@ let print_core
   =
   if ((not !no_print) && enable) || always
   then (
-    let str_marker = if marker then "[info] " else "" in
+    let str_marker =
+      if String.is_empty marker then "" else "[" ^ marker ^ "] " in
     let msg =
       if header
       then (
@@ -200,7 +201,7 @@ let print
     ?(indent = 0)
     ?(always = false)
     ?(enable = true)
-    ?(marker = true)
+    ?(marker = "info")
     ?(autoformat = true)
     (msg : string)
     : unit
@@ -215,7 +216,7 @@ let println
     ?(indent = 0)
     ?(always = false)
     ?(enable = true)
-    ?(marker = true)
+    ?(marker = "info")
     ?(autoformat = true)
     (msg : string)
     : unit
@@ -231,7 +232,7 @@ let hprint
     ?(indent = 0)
     ?(always = false)
     ?(enable = true)
-    ?(marker = true)
+    ?(marker = "info")
     ?(autoformat = true)
     (prefix : string)
     (f : 'a -> string)

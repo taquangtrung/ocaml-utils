@@ -82,14 +82,15 @@ let debug_core
     ?(ruler = `None)
     ?(prefix = "")
     ?(indent = 0)
-    ?(marker = true)
+    ?(marker = "debug")
     ?(enable = true)
     (print_msg : unit -> string)
   =
   if enable
   then (
     let msg = print_msg () in
-    let str_marker = if marker then "[debug] " else "" in
+    let str_marker =
+      if String.is_empty marker then "" else "[" ^ marker ^ "] " in
     let msg =
       if header
       then (
@@ -107,7 +108,7 @@ let debug_core
           let ruler = String.make 21 '-' in
           "\n" ^ ruler ^ "\n" ^ str_marker ^ prefix ^ msg
         | `None ->
-          let msg = if marker then msg else msg in
+          let msg = if String.not_empty marker then msg else msg in
           if String.is_prefix ~prefix:"\n" msg
              || (String.length prefix > 1
                 && String.is_suffix ~suffix:"\n" prefix)
@@ -134,7 +135,7 @@ let debug
     ?(indent = 0)
     ?(always = false)
     ?(enable = true)
-    ?(marker = true)
+    ?(marker = "debug")
     (msg : string)
     : unit
   =
@@ -144,7 +145,7 @@ let debug
   let prefix =
     if not (Core.phys_equal ruler `None)
     then ""
-    else if marker
+    else if String.not_empty marker
     then ""
     else "\n" in
   debug_core ~header ~ruler ~indent ~enable ~prefix (fun () -> msg)
@@ -159,7 +160,7 @@ let ddebug
     ?(indent = 0)
     ?(always = false)
     ?(enable = true)
-    ?(marker = true)
+    ?(marker = "debug")
     (msg : string)
     : unit
   =
@@ -177,7 +178,7 @@ let hdebug
     ?(indent = 0)
     ?(always = false)
     ?(enable = true)
-    ?(marker = true)
+    ?(marker = "debug")
     (msg : string)
     (pr : 'a -> string)
     (data : 'a)
@@ -196,7 +197,7 @@ let hddebug
     ?(indent = 0)
     ?(always = false)
     ?(enable = true)
-    ?(marker = true)
+    ?(marker = "debug")
     (msg : string)
     (pr : 'a -> string)
     (data : 'a)

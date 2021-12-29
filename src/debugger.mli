@@ -31,7 +31,7 @@ val debug
   ?indent:int ->
   ?always:bool ->
   ?enable:bool ->
-  ?marker:bool ->
+  ?marker:string ->
   string ->
   unit
 
@@ -41,7 +41,7 @@ val hdebug
   ?indent:int ->
   ?always:bool ->
   ?enable:bool ->
-  ?marker:bool ->
+  ?marker:string ->
   string ->
   ('a -> string) ->
   'a ->
@@ -55,7 +55,7 @@ val ddebug
   ?indent:int ->
   ?always:bool ->
   ?enable:bool ->
-  ?marker:bool ->
+  ?marker:string ->
   string ->
   unit
 
@@ -65,7 +65,7 @@ val hddebug
   ?indent:int ->
   ?always:bool ->
   ?enable:bool ->
-  ?marker:bool ->
+  ?marker:string ->
   string ->
   ('a -> string) ->
   'a ->

@@ -82,7 +82,7 @@ val print
   ?indent:int ->
   ?always:bool ->
   ?enable:bool ->
-  ?marker:bool ->
+  ?marker:string ->
   ?autoformat:bool ->
   string ->
   unit
@@ -93,7 +93,7 @@ val println
   ?indent:int ->
   ?always:bool ->
   ?enable:bool ->
-  ?marker:bool ->
+  ?marker:string ->
   ?autoformat:bool ->
   string ->
   unit
@@ -104,7 +104,7 @@ val hprint
   ?indent:int ->
   ?always:bool ->
   ?enable:bool ->
-  ?marker:bool ->
+  ?marker:string ->
   ?autoformat:bool ->
   string ->
   ('a -> string) ->
