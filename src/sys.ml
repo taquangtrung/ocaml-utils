@@ -51,13 +51,13 @@ module Sys = struct
   let remove_dir (filename : string) : unit =
     if is_os_unix ()
     then ignore (Sys.command ("rm -rf " ^ filename))
-    else prerr_endline ("TODO: remove_dir: need to support " ^ Sys.os_type)
+    else print_endline ("TODO: remove_dir: need to support " ^ Sys.os_type)
   ;;
 
   let remove_file (filename : string) : unit =
     if is_os_unix ()
     then ignore (Sys.command ("rm -f " ^ filename))
-    else prerr_endline ("TODO: remove_file: need to support " ^ Sys.os_type)
+    else print_endline ("TODO: remove_file: need to support " ^ Sys.os_type)
   ;;
 
   let make_dir (dirname : string) : unit =

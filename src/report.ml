@@ -19,7 +19,7 @@ let hide_warning_message = ref false
 (** Print a warning message *)
 let warning (msg : string) : unit =
   let msg = "[warning] " ^ msg in
-  if not !hide_warning_message then prerr_endline msg
+  if not !hide_warning_message then print_endline msg
 ;;
 
 (** High-order print a warning message *)
