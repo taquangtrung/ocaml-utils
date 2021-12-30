@@ -45,6 +45,16 @@ module List : sig
     (unit -> 'a) list ->
     'a
 
+  module type SortedListElement = sig
+    type t
+
+    val compare : t -> t -> int
+  end
+
+  module MakeSortedList : functor (E : SortedListElement) -> sig
+    val of_list : E.t list -> E.t list
+  end
+
   include module type of struct
     include Core.List
   end

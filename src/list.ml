@@ -169,6 +169,28 @@ module List = struct
   ;;
 
   (*------------------------------------
+   * Sub-module for sorted list
+   *-----------------------------------*)
+
+  module type SortedListElement = sig
+    type t
+
+    val compare : t -> t -> int
+  end
+
+  (* module type SortedList = functor (E: SortedListElement) -> sig *)
+  (*   type t = E *)
+
+  (* end *)
+
+  module MakeSortedList = functor (E : SortedListElement) -> struct
+    type t = E.t list
+
+    let of_list (lst: E.t list) : t =
+      List.stable_sort ~compare:E.compare lst
+  end
+
+  (*------------------------------------
    * Include the existing List library
    *-----------------------------------*)
 
