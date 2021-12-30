@@ -168,26 +168,34 @@ module List = struct
     compute lst
   ;;
 
-  (*------------------------------------
-   * Sub-module for sorted list
-   *-----------------------------------*)
+  (*-------------------------------------------------------------
+   * Sub-module for list whose elements are sorted increasingly
+   * by a comparing function
+   *------------------------------------------------------------*)
 
-  module type SortedListElement = sig
-    type t
+  module OrderedList = struct
+    type 'a t =
+      { lst_elements : 'a list;
+        lst_compare : 'a -> 'a -> int
+      }
 
-    val compare : t -> t -> int
-  end
+    let of_list (lst : 'a list) ~(compare : 'a -> 'a -> int) : 'a t =
+      let elems = List.stable_sort ~compare lst in
+      { lst_elements = elems; lst_compare = compare }
+    ;;
 
-  (* module type SortedList = functor (E: SortedListElement) -> sig *)
-  (*   type t = E *)
+    let to_list (olst : 'a t) : 'a list = olst.lst_elements
 
-  (* end *)
+    let insert (lst : 'a t) (elm : 'a) : 'a t =
+      let elems =
+        insert_sorti_dedup lst.lst_elements elm ~compare:lst.lst_compare in
+      { lst with lst_elements = elems }
+    ;;
 
-  module MakeSortedList = functor (E : SortedListElement) -> struct
-    type t = E.t list
+    let concat (lst: 'a t) (unordered_lst: 'a list) :'a t =
+      List.fold ~f:insert ~init:lst unordered_lst
 
-    let of_list (lst: E.t list) : t =
-      List.stable_sort ~compare:E.compare lst
+
   end
 
   (*------------------------------------

@@ -45,14 +45,13 @@ module List : sig
     (unit -> 'a) list ->
     'a
 
-  module type SortedListElement = sig
-    type t
+  module OrderedList : sig
+    type 'a t
 
-    val compare : t -> t -> int
-  end
-
-  module MakeSortedList : functor (E : SortedListElement) -> sig
-    val of_list : E.t list -> E.t list
+    val of_list : 'a list -> compare:('a -> 'a -> int) -> 'a t
+    val to_list : 'a t -> 'a list
+    val insert : 'a t -> 'a -> 'a t
+    val concat : 'a t -> 'a list -> 'a t
   end
 
   include module type of struct
