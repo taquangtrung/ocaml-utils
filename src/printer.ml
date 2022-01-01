@@ -9,6 +9,8 @@
 
 open Core
 open Extcore__String
+module FM = CamlinternalFormat
+module FB = CamlinternalFormatBasics
 
 let no_print = ref false
 
@@ -244,8 +246,24 @@ let hprint
     msg
 ;;
 
-(* let printf *)
-
-let nprint _ = ()
-let nprintln _ = ()
-let nhprint _ _ = ()
+(** Print message use format template similar to printf. *)
+let printf
+    ?(mtype = "debug")
+    ?(header = false)
+    ?(ruler = `None)
+    ?(indent = 0)
+    ?(always = false)
+    ?(enable = true)
+    ?(autoformat = true)
+    (fmt : ('a, unit, string, string, string, unit) format6)
+    : 'a
+  =
+  let kprintf k (FB.Format (fmt, _)) =
+    let print_msg acc =
+      let buf = Buffer.create 64 in
+      let _ = FM.strput_acc buf acc in
+      let msg = Buffer.contents buf in
+      print ~mtype ~header ~ruler ~indent ~always ~enable ~autoformat msg in
+    FM.make_printf (fun acc -> print_msg acc; k ()) FM.End_of_acc fmt in
+  kprintf (fun s -> s) fmt
+;;

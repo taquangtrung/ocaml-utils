@@ -81,11 +81,15 @@ val hddebug
   'a ->
   unit
 
-(*** disable debugging ***)
-
-val ndebug : 'a -> unit
-val nhdebug : 'a -> 'b -> 'c -> unit
-val nhddebug : 'a -> 'b -> 'c -> unit
+val ddebugf
+  :  ?mtype:string ->
+  ?header:bool ->
+  ?ruler:[< `Long | `Medium | `None | `Short > `None ] ->
+  ?indent:int ->
+  ?always:bool ->
+  ?enable:bool ->
+  ('a, unit, string, string, string, unit) format6 ->
+  'a
 
 (*** interactive debugging ***)
 

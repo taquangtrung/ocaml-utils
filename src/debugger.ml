@@ -188,8 +188,6 @@ let debugf
       let buf = Buffer.create 64 in
       let _ = FM.strput_acc buf acc in
       let msg = Buffer.contents buf in
-      (* let _ = FM.output_acc o acc in *)
-      (* ignore (exit 1) in *)
       debug ~mtype ~header ~ruler ~indent ~always ~enable msg in
     FM.make_printf (fun acc -> print_msg acc; k ()) FM.End_of_acc fmt in
   kdprintf (fun s -> s) fmt
@@ -230,11 +228,26 @@ let hddebug
   debug_core ~header ~ruler ~indent ~enable ~mtype ~prefix:msg printer
 ;;
 
-(*** disable debugging printers ***)
-
-let ndebug _ = ()
-let nhdebug _ _ _ = ()
-let nhddebug _ _ _ = ()
+(** print a deep mode_debug message *)
+let ddebugf
+      ?(mtype = "debug")
+      ?(header = false)
+      ?(ruler = `None)
+      ?(indent = 0)
+      ?(always = false)
+      ?(enable = true)
+      (fmt : ('a, unit, string, string, string, unit) format6)
+  : 'a
+  =
+  let kddprintf k (FB.Format (fmt, _)) =
+    let print_msg acc =
+      let buf = Buffer.create 64 in
+      let _ = FM.strput_acc buf acc in
+      let msg = Buffer.contents buf in
+      ddebug ~mtype ~header ~ruler ~indent ~always ~enable msg in
+    FM.make_printf (fun acc -> print_msg acc; k ()) FM.End_of_acc fmt in
+  kddprintf (fun s -> s) fmt
+;;
 
 (*******************************************************************
  ** Interactive debugging

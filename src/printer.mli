@@ -111,11 +111,16 @@ val hprint
   'a ->
   unit
 
-(*** Disable printing ***)
-
-val nprint : 'a -> unit
-val nprintln : 'a -> unit
-val nhprint : 'a -> 'b -> unit
+val printf
+  :  ?mtype:string ->
+  ?header:bool ->
+  ?ruler:[< `Long | `Medium | `None | `Short > `None ] ->
+  ?indent:int ->
+  ?always:bool ->
+  ?enable:bool ->
+  ?autoformat:bool ->
+  ('a, unit, string, string, string, unit) format6 ->
+  'a
 
 (*** Wrapping OCaml printing functions ***)
 val sprintf : ('a, unit, string) format -> 'a
