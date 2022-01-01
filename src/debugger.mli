@@ -47,6 +47,16 @@ val hdebug
   'a ->
   unit
 
+val debugf
+  :  ?mtype:string ->
+  ?header:bool ->
+  ?ruler:[< `Long | `Medium | `None | `Short > `None ] ->
+  ?indent:int ->
+  ?always:bool ->
+  ?enable:bool ->
+  ('a, unit, string, string, string, unit) format6 ->
+  'a
+
 (*** deep debugging ***)
 
 val ddebug

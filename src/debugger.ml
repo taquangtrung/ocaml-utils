@@ -8,6 +8,8 @@
 (* Printer module *)
 open Core
 open Extcore__String
+module FM = CamlinternalFormat
+module FB = CamlinternalFormatBasics
 
 (*------------------
  * debugging flags
@@ -151,26 +153,6 @@ let debug
   debug_core ~header ~ruler ~indent ~enable ~prefix (fun () -> msg)
 ;;
 
-(*** deep debugging printers ***)
-
-(** print a deep mode_debug message *)
-let ddebug
-    ?(mtype = "debug")
-    ?(header = false)
-    ?(ruler = `None)
-    ?(indent = 0)
-    ?(always = false)
-    ?(enable = true)
-    (msg : string)
-    : unit
-  =
-  let enable = enable && (not !no_debug) && (!mode_deep_debug || always) in
-  let printer () = msg in
-  debug_core ~header ~ruler ~indent ~enable ~prefix:msg ~mtype printer
-;;
-
-(*** higher order debugging printer ***)
-
 (** high-order print a mode_debug message *)
 let hdebug
     ?(mtype = "debug")
@@ -187,6 +169,47 @@ let hdebug
     enable && (not !no_debug) && (!mode_debug || !mode_deep_debug || always)
   in
   let printer () = pr data in
+  debug_core ~header ~ruler ~indent ~enable ~prefix:msg ~mtype printer
+;;
+
+(** Print debug message use format template similar to printf. *)
+let debugf
+    ?(mtype = "debug")
+    ?(header = false)
+    ?(ruler = `None)
+    ?(indent = 0)
+    ?(always = false)
+    ?(enable = true)
+    (fmt : ('a, unit, string, string, string, unit) format6)
+    : 'a
+  =
+  let kdprintf k (FB.Format (fmt, _)) =
+    let print_msg acc =
+      let buf = Buffer.create 64 in
+      let _ = FM.strput_acc buf acc in
+      let msg = Buffer.contents buf in
+      (* let _ = FM.output_acc o acc in *)
+      (* ignore (exit 1) in *)
+      debug ~mtype ~header ~ruler ~indent ~always ~enable msg in
+    FM.make_printf (fun acc -> print_msg acc; k ()) FM.End_of_acc fmt in
+  kdprintf (fun s -> s) fmt
+;;
+
+(*** deep debugging printers ***)
+
+(** print a deep mode_debug message *)
+let ddebug
+    ?(mtype = "debug")
+    ?(header = false)
+    ?(ruler = `None)
+    ?(indent = 0)
+    ?(always = false)
+    ?(enable = true)
+    (msg : string)
+    : unit
+  =
+  let enable = enable && (not !no_debug) && (!mode_deep_debug || always) in
+  let printer () = msg in
   debug_core ~header ~ruler ~indent ~enable ~prefix:msg ~mtype printer
 ;;
 
