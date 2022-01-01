@@ -16,7 +16,7 @@ module Sys = struct
    * New functions
    *-------------------------------*)
 
-  let apply_get_runtime ~(f : unit -> 'a) : 'a * float =
+  let apply_track_runtime ~(f : unit -> 'a) : 'a * float =
     let time_begin = Unix.gettimeofday () in
     let res = f () in
     let time_end = Unix.gettimeofday () in

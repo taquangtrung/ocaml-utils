@@ -6,7 +6,7 @@
  ********************************************************************)
 
 module Sys : sig
-  val apply_get_runtime : f:(unit -> 'a) -> 'a * float
+  val apply_track_runtime : f:(unit -> 'a) -> 'a * float
   val apply_report_runtime : ?task:string -> f:(unit -> 'a) -> 'a
   val apply_record_runtime : f:(unit -> 'a) -> float ref -> 'a
   val is_os_unix : unit -> bool
