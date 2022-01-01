@@ -228,8 +228,8 @@ let println
   print_core ~header ~ruler ~indent ~always ~enable ~mtype ~autoformat msg
 ;;
 
-(** high-order print a message *)
-let hprint
+(** print a message using a printer *)
+let printp
     ?(mtype = "info")
     ?(header = false)
     ?(ruler = `None)

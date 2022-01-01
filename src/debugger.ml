@@ -153,8 +153,8 @@ let debug
   debug_core ~header ~ruler ~indent ~enable ~prefix (fun () -> msg)
 ;;
 
-(** high-order print a mode_debug message *)
-let hdebug
+(** print a mode_debug message using a printer *)
+let debugp
     ?(mtype = "debug")
     ?(header = false)
     ?(ruler = `None)
@@ -211,8 +211,8 @@ let ddebug
   debug_core ~header ~ruler ~indent ~enable ~prefix:msg ~mtype printer
 ;;
 
-(** high-order print a deep mode_debug message *)
-let hddebug
+(** print a deep mode_debug message using a printer *)
+let ddebugp
     ?(mtype = "debug")
     ?(header = false)
     ?(ruler = `None)

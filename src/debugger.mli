@@ -35,7 +35,7 @@ val debug
   string ->
   unit
 
-val hdebug
+val debugp
   :  ?mtype:string ->
   ?header:bool ->
   ?ruler:[< `Long | `Medium | `None | `Short > `None ] ->
@@ -69,7 +69,7 @@ val ddebug
   string ->
   unit
 
-val hddebug
+val ddebugp
   :  ?mtype:string ->
   ?header:bool ->
   ?ruler:[< `Long | `Medium | `None | `Short > `None ] ->

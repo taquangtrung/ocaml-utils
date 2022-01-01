@@ -98,7 +98,7 @@ val println
   string ->
   unit
 
-val hprint
+val printp
   :  ?mtype:string ->
   ?header:bool ->
   ?ruler:[< `Long | `Medium | `None | `Short > `None ] ->
