@@ -6,9 +6,9 @@
  ********************************************************************)
 
 module Sys : sig
-  val track_runtime : (unit -> 'a) -> 'a * float
-  val report_runtime : ?task:string -> (unit -> 'a) -> 'a
-  val record_runtime : (unit -> 'a) -> float ref -> 'a
+  val apply_get_runtime : (unit -> 'a) -> 'a * float
+  val apply_report_runtime : ?task:string -> (unit -> 'a) -> 'a
+  val apply_record_runtime : (unit -> 'a) -> float ref -> 'a
   val is_os_unix : unit -> bool
   val remove_dir : string -> unit
   val remove_file : string -> unit
