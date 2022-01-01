@@ -22,8 +22,8 @@ let warning (msg : string) : unit =
   if not !hide_warning_message then print_endline msg
 ;;
 
-(** High-order print a warning message *)
-let hwarning (prefix : string) (f : 'a -> string) (x : 'a) : unit =
+(** Print a warning message using a printer *)
+let warningp (prefix : string) (f : 'a -> string) (x : 'a) : unit =
   let msg = prefix ^ f x in
   warning msg
 ;;
@@ -56,8 +56,8 @@ let error ?(log = "") (msg : string) : 't =
   exit 1
 ;;
 
-(** High-order report an error message and exit the program. *)
-let herror ?(log = "") (prefix : string) (f : 'a -> string) (x : 'a) : 't =
+(** Report an error message using a printer and exit the program. *)
+let errorp ?(log = "") (prefix : string) (f : 'a -> string) (x : 'a) : 't =
   let msg = prefix ^ f x in
   error ~log msg
 ;;
