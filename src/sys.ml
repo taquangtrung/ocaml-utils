@@ -16,7 +16,7 @@ module Sys = struct
    * New functions
    *-------------------------------*)
 
-  let apply_track_runtime ~(f : unit -> 'a) : 'a * float =
+  let track_runtime ~(f : unit -> 'a) : 'a * float =
     let time_begin = Unix.gettimeofday () in
     let res = f () in
     let time_end = Unix.gettimeofday () in
@@ -24,7 +24,7 @@ module Sys = struct
     res, time
   ;;
 
-  let apply_report_runtime ?(task = "") ~(f : unit -> 'a) : 'a =
+  let print_runtime ~(msg: string) ~(f : unit -> 'a) : 'a =
     let res =
       if String.is_empty task
       then f ()
@@ -33,12 +33,12 @@ module Sys = struct
         let res = f () in
         let time_end = Unix.gettimeofday () in
         let time = time_end -. time_begin in
-        let _ = print_endline (task ^ ": " ^ sprintf "%.3fs" time) in
+        let _ = print_endline (msg ^ ": " ^ sprintf "%.3fs" time) in
         res) in
     res
   ;;
 
-  let apply_record_runtime ~(f : unit -> 'a) (time : float ref) : 'a =
+  let record_runtime ~(f : unit -> 'a) (time : float ref) : 'a =
     let time_begin = Unix.gettimeofday () in
     let res = f () in
     let time_end = Unix.gettimeofday () in
