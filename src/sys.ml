@@ -26,7 +26,7 @@ module Sys = struct
 
   let print_runtime ~(msg: string) ~(f : unit -> 'a) : 'a =
     let res =
-      if String.is_empty task
+      if String.is_empty msg
       then f ()
       else (
         let time_begin = Unix.gettimeofday () in
