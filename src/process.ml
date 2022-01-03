@@ -57,6 +57,7 @@ let close_process proc : unit =
 ;;
 
 let read_output proc : string =
+  (*In_channel.input_all proc.proc_in_channel*)
   let rec read acc =
     match In_channel.input_line proc.proc_in_channel with
     | Some output -> read (output :: acc)
@@ -66,6 +67,7 @@ let read_output proc : string =
 ;;
 
 let read_error proc : string =
+  (*In_channel.input_all proc.proc_err_channel*)
   let rec read acc =
     match In_channel.input_line proc.proc_err_channel with
     | Some output -> read (output :: acc)
@@ -130,4 +132,36 @@ let run_command_get_output (cmd : string list) : (string, string) result =
     let msg = read_error proc in
     let _ = close_process proc in
     Error msg
+;;
+
+let run_command_to_file (cmd : string list) (file : string)
+    : (unit, string) result
+  =
+  let in_read, in_write = Unix.pipe () in
+  let out_read, out_write = Unix.pipe () in
+  let err_read, err_write = Unix.pipe () in
+  let file_ds = Unix.openfile ~mode:[ Unix.O_CREAT; Unix.O_WRONLY ] file in
+  let pid =
+    match Unix.fork () with
+    | `In_the_child ->
+      (* NOTE: the flag "close_on_exec" might affect reading output/error *)
+      let () =
+        Unix.dup2 ~src:out_read ~dst:Unix.stdin ~close_on_exec:false () in
+      let () =
+        Unix.dup2 ~src:file_ds ~dst:Unix.stdout ~close_on_exec:false () in
+      let () =
+        Unix.dup2 ~src:file_ds ~dst:Unix.stderr ~close_on_exec:false () in
+      (* if not cloexec then List.iter Unix.close toclose; *)
+      let prog = List.hd_exn cmd in
+      let _ = Unix.exec ~prog ~argv:cmd () in
+      Pid.of_int 0
+    | `In_the_parent id -> id in
+  let _ = Unix.close out_read in
+  let _ = Unix.close in_write in
+  let _ = Unix.close err_write in
+  match Unix.waitpid pid with
+  | Ok _ -> Ok ()
+  | Error e ->
+    let err = string_of_sexp (Unix.Exit_or_signal.sexp_of_error e) in
+    Error err
 ;;
