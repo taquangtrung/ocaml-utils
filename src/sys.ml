@@ -24,7 +24,7 @@ module Sys = struct
     res, time
   ;;
 
-  let print_runtime ~(msg: string) ~(f : unit -> 'a) : 'a =
+  let print_runtime ~(msg : string) ~(f : unit -> 'a) : 'a =
     let res =
       if String.is_empty msg
       then f ()
@@ -70,6 +70,40 @@ module Sys = struct
           ("Failed to make dir: " ^ dirname ^ "."
          ^ "A regular file of the same name already exists.")
       | _ -> ())
+  ;;
+
+  type os_type =
+    | Linux
+    | MacOS
+    | Win32
+    | Cygwin
+    | UnkownOS
+
+  let pr_os_type (os : os_type) =
+    match os with
+    | Linux -> "Linux"
+    | MacOS -> "MacOS"
+    | Win32 -> "Windows 32bit"
+    | Cygwin -> "Cygwin"
+    | UnkownOS -> "Uknown OS"
+  ;;
+
+  let get_os_type () =
+    if String.equal Sys.os_type "Win32"
+    then Win32
+    else if String.equal Sys.os_type "Cygwin"
+    then Cygwin
+    else if String.equal Sys.os_type "Unix"
+    then (
+      let ic = Unix.open_process_in "uname" in
+      let uname = input_line ic in
+      let _ = close_in ic in
+      if String.equal uname "Linux"
+      then Linux
+      else if String.equal uname "Darwin"
+      then MacOS
+      else UnkownOS)
+    else UnkownOS
   ;;
 
   (*--------------------------------------

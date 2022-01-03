@@ -14,6 +14,16 @@ module Sys : sig
   val remove_file : string -> unit
   val make_dir : string -> unit
 
+  type os_type =
+    | Linux
+    | MacOS
+    | Win32
+    | Cygwin
+    | UnkownOS
+
+  val pr_os_type : os_type -> string
+  val get_os_type : unit -> os_type
+
   include module type of struct
     include Core.Sys
   end
