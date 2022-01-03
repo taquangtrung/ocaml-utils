@@ -9,5 +9,5 @@ which is implemented on top of the OCaml Core standard library of Jane Street.
 - Install `ocaml-utils` by running the following command:
 
   ```
-  opam pin add extcore git://github.com/taquangtrung/ocaml-utils.git
+  opam pin add outils git://github.com/taquangtrung/ocaml-utils.git
   ```
