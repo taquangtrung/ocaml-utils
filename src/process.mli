@@ -34,4 +34,4 @@ val restart_process : process -> process
 
 val run_command : string list -> (unit, string) result
 val run_command_get_output : string list -> (string, string) result
-val run_command_to_file : string list -> string -> (unit, string) result
+val run_command_output_to_file : string list -> string -> (unit, string) result

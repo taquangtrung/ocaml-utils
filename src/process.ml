@@ -28,11 +28,10 @@ let open_process cmd : In_channel.t * Out_channel.t * In_channel.t * int =
     match Unix.fork () with
     | `In_the_child ->
       (* NOTE: the flag "close_on_exec" might affect reading output/error *)
-      let () =
-        Unix.dup2 ~src:out_read ~dst:Unix.stdin ~close_on_exec:false () in
-      let () =
+      let _ = Unix.dup2 ~src:out_read ~dst:Unix.stdin ~close_on_exec:false () in
+      let _ =
         Unix.dup2 ~src:in_write ~dst:Unix.stdout ~close_on_exec:false () in
-      let () =
+      let _ =
         Unix.dup2 ~src:err_write ~dst:Unix.stderr ~close_on_exec:false () in
       (* if not cloexec then List.iter Unix.close toclose; *)
       let prog = List.hd_exn cmd in
@@ -134,31 +133,24 @@ let run_command_get_output (cmd : string list) : (string, string) result =
     Error msg
 ;;
 
-let run_command_to_file (cmd : string list) (file : string)
+let run_command_output_to_file (cmd : string list) (file : string)
     : (unit, string) result
   =
-  let in_read, in_write = Unix.pipe () in
-  let out_read, out_write = Unix.pipe () in
-  let err_read, err_write = Unix.pipe () in
+  let out_read, _ = Unix.pipe () in
   let file_ds = Unix.openfile ~mode:[ Unix.O_CREAT; Unix.O_WRONLY ] file in
   let pid =
     match Unix.fork () with
     | `In_the_child ->
       (* NOTE: the flag "close_on_exec" might affect reading output/error *)
-      let () =
-        Unix.dup2 ~src:out_read ~dst:Unix.stdin ~close_on_exec:false () in
-      let () =
-        Unix.dup2 ~src:file_ds ~dst:Unix.stdout ~close_on_exec:false () in
-      let () =
-        Unix.dup2 ~src:file_ds ~dst:Unix.stderr ~close_on_exec:false () in
+      let _ = Unix.dup2 ~src:out_read ~dst:Unix.stdin ~close_on_exec:false () in
+      let _ = Unix.dup2 ~src:file_ds ~dst:Unix.stdout ~close_on_exec:false () in
+      let _ = Unix.dup2 ~src:file_ds ~dst:Unix.stderr ~close_on_exec:false () in
       (* if not cloexec then List.iter Unix.close toclose; *)
       let prog = List.hd_exn cmd in
       let _ = Unix.exec ~prog ~argv:cmd () in
       Pid.of_int 0
     | `In_the_parent id -> id in
   let _ = Unix.close out_read in
-  let _ = Unix.close in_write in
-  let _ = Unix.close err_write in
   match Unix.waitpid pid with
   | Ok _ -> Ok ()
   | Error e ->
