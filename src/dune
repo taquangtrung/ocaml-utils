@@ -1,8 +1,8 @@
 (include_subdirs unqualified)
 
 (library
- (name extcore)
- (public_name extcore)
+ (name outils)
+ (public_name outils)
  (libraries core num)
  (flags
   (:standard

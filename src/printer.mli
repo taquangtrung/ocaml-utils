@@ -1,6 +1,6 @@
 (********************************************************************
- * This file is part of ocaml-extcore, an extended library of the
- * OCaml Core standard library with additionally useful functions.
+ * This file is part of ocaml-utils, an extended library of the
+ * OCaml Core standard library with useful utility functions.
  *
  * Copyright (c) 2021 Ta Quang Trung.
  ********************************************************************)

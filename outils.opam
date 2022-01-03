@@ -6,8 +6,8 @@ description:
   "This library is a collection of additionally useful OCaml functions, which are implemented on top of the OCaml Core library."
 maintainer: ["Ta Quang Trung"]
 authors: ["Ta Quang Trung"]
-homepage: "https://github.com/taquangtrung/ocaml-extcore"
-bug-reports: "https://github.com/taquangtrung/ocaml-extcore/issues"
+homepage: "https://github.com/taquangtrung/ocaml-utils"
+bug-reports: "https://github.com/taquangtrung/ocaml-utils/issues"
 depends: [
   "core" {>= "0.14.1"}
   "dune" {>= "2.9"}
