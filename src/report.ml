@@ -32,8 +32,9 @@ let warningp (prefix : string) (f : 'a -> string) (x : 'a) : unit =
 let warningf (fmt : ('a, Out_channel.t, unit, unit, unit, unit) format6) : 'a =
   let _ = print_string "[warning] " in
   let kwprintf k o (FB.Format (fmt, _)) =
-    FM.make_printf (fun acc -> FM.output_acc o acc; k o) FM.End_of_acc fmt
-  in
+    FM.make_printf
+      (fun acc -> FM.output_acc o acc; print_endline ""; k o)
+      FM.End_of_acc fmt in
   kwprintf ignore stdout fmt
 ;;
 
@@ -74,6 +75,7 @@ let errorf
     let print_error_and_exit o acc =
       let _ = FM.output_acc o acc in
       let _ = print_error_log log in
+      print_endline "";
       ignore (exit 1) in
     FM.make_printf
       (fun acc -> print_error_and_exit o acc; k o)
