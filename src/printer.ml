@@ -56,7 +56,10 @@ let pr_list
     if String.equal obrace ""
     then extra
     else if String.is_substring sep ~substring:"\n"
-    then String.mk_indent (String.length obrace + 1) ^ extra
+    then
+      if String.is_empty (String.strip_newline obrace)
+      then extra
+      else String.mk_indent 2 ^ extra
     else extra in
   let content =
     match xs with
@@ -67,7 +70,7 @@ let pr_list
       String.concat ~sep xs in
   let obrace, cbrace =
     if (not (String.is_substring content ~substring:"\n"))
-       || String.equal obrace ""
+       || String.is_empty (String.strip_newline obrace)
     then obrace, cbrace
     else indent ^ obrace ^ " ", " " ^ cbrace in
   obrace ^ content ^ cbrace
@@ -166,7 +169,7 @@ let print_core
     let msg =
       if header
       then (
-        let msg = if String.is_empty msg then msg else "\n\n" ^ msg ^ "\n\n" in
+        let msg = if String.is_empty msg then msg else "\n\n" ^ msg ^ "\n" in
         "\n" ^ String.make 68 '*' ^ "\n" ^ str_msg_type ^ prefix ^ msg)
       else (
         match ruler with
@@ -179,9 +182,8 @@ let print_core
         | `None ->
           if not autoformat
           then msg
-          else if String.is_prefix ~prefix:"\n" msg
-                  || (String.length prefix > 1
-                     && String.is_suffix ~suffix:"\n" prefix)
+          else if String.is_suffix ~suffix:"\n" prefix
+                  && String.not_empty (String.strip_newline prefix)
           then (
             let indent = String.count_indent prefix + 2 + indent in
             str_msg_type ^ prefix ^ String.indent indent msg)
