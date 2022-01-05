@@ -115,7 +115,7 @@ let run_command (cmd : string list) : (unit, string) result =
     | Error e ->
       let output = read_output proc in
       let error = read_error proc in
-      let exn = string_of_sexp (Unix.Exit_or_signal.sexp_of_error e) in
+      let exn = Unix.Exit_or_signal.to_string_hum (Error e) in
       let log = String.concat_if_not_empty ~sep:"\n" [ output; error; exn ] in
       let _ = close_process proc in
       Error log)
