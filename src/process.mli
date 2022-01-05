@@ -22,13 +22,9 @@ val send_input : process -> string -> unit
 
 (*** Start, stop processes ***)
 
-val open_process
-  :  string list ->
-  Core.In_channel.t * Core.Out_channel.t * Core.In_channel.t * int
-
-val start_process : string list -> process
+val open_process : string list -> (process, string) result
 val close_process : process -> unit
-val restart_process : process -> process
+val restart_process : process -> (process, string) result
 
 (*** Run commands ***)
 
