@@ -46,7 +46,10 @@ let hide_error_log = ref false
 
 let print_error_log (log : string) : unit =
   if (not !hide_error_log) && String.not_empty log
-  then print_endline ("[Error log]\n" ^ String.indent 2 log)
+  then
+    print_endline
+      (">> Below is the detailed error log:\n"
+     ^ "===================================\n" ^ log)
   else ()
 ;;
 
@@ -74,8 +77,8 @@ let errorf
   let keprintf k o (FB.Format (fmt, _)) =
     let print_error_and_exit o acc =
       let _ = FM.output_acc o acc in
+      let _ = print_endline "" in
       let _ = print_error_log log in
-      print_endline "";
       ignore (exit 1) in
     FM.make_printf
       (fun acc -> print_error_and_exit o acc; k o)
