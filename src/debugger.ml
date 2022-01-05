@@ -122,8 +122,8 @@ let debug_core
             let indent = String.count_indent prefix + 2 + indent in
             str_msg_type ^ prefix ^ "\n" ^ String.indent indent msg)
           else
-            String.indent indent
-              (String.align_line (str_msg_type ^ prefix) msg)) in
+            str_msg_type ^ String.indent indent (String.align_line prefix msg))
+    in
     print_endline msg)
   else ()
 ;;
@@ -230,14 +230,14 @@ let ddebugp
 
 (** print a deep mode_debug message *)
 let ddebugf
-      ?(mtype = "debug")
-      ?(header = false)
-      ?(ruler = `None)
-      ?(indent = 0)
-      ?(always = false)
-      ?(enable = true)
-      (fmt : ('a, unit, string, string, string, unit) format6)
-  : 'a
+    ?(mtype = "debug")
+    ?(header = false)
+    ?(ruler = `None)
+    ?(indent = 0)
+    ?(always = false)
+    ?(enable = true)
+    (fmt : ('a, unit, string, string, string, unit) format6)
+    : 'a
   =
   let kddprintf k (FB.Format (fmt, _)) =
     let print_msg acc =
