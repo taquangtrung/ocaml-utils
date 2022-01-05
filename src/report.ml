@@ -46,7 +46,7 @@ let hide_error_log = ref false
 
 let print_error_log (log : string) : unit =
   if (not !hide_error_log) && String.not_empty log
-  then print_endline ("\n[Error log]\n" ^ String.indent 2 log)
+  then print_endline ("[Error log]\n" ^ String.indent 2 log)
   else ()
 ;;
 
