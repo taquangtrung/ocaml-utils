@@ -164,21 +164,21 @@ let print_core
   =
   if ((not !no_print) && enable) || always
   then (
-    let str_msg_type =
-      if String.is_empty mtype then "" else "[" ^ mtype ^ "] " in
+    let indicator, indent =
+      if String.is_empty mtype
+      then "", indent
+      else "[" ^ mtype ^ "] ", indent + 2 in
     let msg =
       if header
       then (
         let msg = if String.is_empty msg then msg else "\n\n" ^ msg ^ "\n" in
-        "\n" ^ String.make 68 '*' ^ "\n" ^ str_msg_type ^ prefix ^ msg)
+        "\n" ^ String.make 68 '*' ^ "\n" ^ indicator ^ prefix ^ msg)
       else (
         match ruler with
-        | `Long ->
-          "\n" ^ String.make 68 '*' ^ "\n" ^ str_msg_type ^ prefix ^ msg
+        | `Long -> "\n" ^ String.make 68 '*' ^ "\n" ^ indicator ^ prefix ^ msg
         | `Medium ->
-          "\n" ^ String.make 36 '=' ^ "\n" ^ str_msg_type ^ prefix ^ msg
-        | `Short ->
-          "\n" ^ String.make 21 '-' ^ "\n" ^ str_msg_type ^ prefix ^ msg
+          "\n" ^ String.make 36 '=' ^ "\n" ^ indicator ^ prefix ^ msg
+        | `Short -> "\n" ^ String.make 21 '-' ^ "\n" ^ indicator ^ prefix ^ msg
         | `None ->
           if not autoformat
           then msg
@@ -186,15 +186,13 @@ let print_core
                   && String.not_empty (String.strip_newline prefix)
           then (
             let indent = String.count_indent prefix + 2 + indent in
-            str_msg_type ^ prefix ^ String.indent indent msg)
-          else if String.length prefix > 12
-                  && String.exists ~f:(fun c -> Char.( = ) c '\n') msg
-          then (
-            let indent = String.count_indent prefix + 2 + indent in
-            str_msg_type ^ prefix ^ "\n" ^ String.indent indent msg)
-          else
-            String.indent indent
-              (String.align_line (str_msg_type ^ prefix) msg)) in
+            indicator ^ prefix ^ String.indent ~skipfirst:true indent msg)
+          else if String.length prefix > 12 && String.is_infix ~infix:"\n" msg
+          then
+            indicator ^ prefix ^ "\n"
+            ^ String.indent ~skipfirst:false indent msg
+          else indicator ^ String.indent ~skipfirst:true indent (prefix ^ msg))
+    in
     print_endline msg)
   else ()
 ;;
