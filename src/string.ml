@@ -51,14 +51,20 @@ module String = struct
     String.concat ~sep strs
   ;;
 
+  let slice_from_pattern (s : string) ~(pattern : string) : string option =
+    match String.substr_index s ~pattern with
+    | Some idx -> Some (String.slice s idx (String.length s))
+    | None -> None
+  ;;
+
   (*-----------------------
    * Formatting string
    *----------------------*)
 
   let count_indent (str : string) : int =
     let str = String.lstrip ~drop:(fun c -> Char.equal c '\n') str in
-    let index = String.lfindi ~f:(fun _ c -> Char.( <> ) c ' ') str in
-    match index with
+    let idx = String.lfindi ~f:(fun _ c -> Char.( <> ) c ' ') str in
+    match idx with
     | None -> 0
     | Some i -> i
   ;;

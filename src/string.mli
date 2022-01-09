@@ -20,6 +20,9 @@ module String : sig
 
   val replace_if_empty : string -> replacer:string -> string
   val concat_if_not_empty : string list -> sep:string -> string
+  val slice_from_pattern : string -> pattern:string -> string option
+
+  (*** String formatting *)
   val count_indent : string -> int
   val mk_indent : int -> string
   val indent : ?skipfirst:bool -> int -> string -> string
