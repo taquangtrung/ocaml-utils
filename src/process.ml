@@ -106,20 +106,28 @@ let restart_process proc : (process, string) result =
 ;;
 
 let run_command (cmd : string list) : (unit, string) result =
-  match open_process cmd with
-  | Ok proc ->
-    (match Unix.waitpid (Pid.of_int proc.proc_pid) with
-    | Ok _ ->
-      let _ = close_process proc in
-      Ok ()
-    | Error e ->
-      let output = read_output proc in
-      let error = read_error proc in
-      let exn = Unix.Exit_or_signal.to_string_hum (Error e) in
-      let log = String.concat_if_not_empty ~sep:"\n" [ output; error; exn ] in
-      let _ = close_process proc in
-      Error log)
-  | Error log -> Error log
+  let res =
+    match open_process cmd with
+    | Ok proc ->
+      (match Unix.waitpid (Pid.of_int proc.proc_pid) with
+      | Ok _ ->
+        let _ = close_process proc in
+        Ok ()
+      | Error e ->
+        let output = read_output proc in
+        let error = read_error proc in
+        let exn = Unix.Exit_or_signal.to_string_hum (Error e) in
+        let log = String.concat_if_not_empty ~sep:"\n" [ output; error; exn ] in
+        let _ = close_process proc in
+        Error log)
+    | Error log -> Error log in
+  match res with
+  | Ok () -> res
+  | Error log ->
+    Error
+      ("Detailed errors when running command:\n  "
+      ^ (String.concat ~sep:" " cmd ^ "\n")
+      ^ "----------------------------\n" ^ log)
 ;;
 
 (** Run a command and get output. The output can be:
@@ -127,18 +135,26 @@ let run_command (cmd : string list) : (unit, string) result =
     - (Error error_message) *)
 
 let run_command_get_output (cmd : string list) : (string, string) result =
-  match open_process cmd with
-  | Ok proc ->
-    (match Unix.waitpid (Pid.of_int proc.proc_pid) with
-    | Ok _ ->
-      let output = read_output proc ^ read_error proc in
-      let _ = close_process proc in
-      Ok output
-    | Error _ ->
-      let msg = read_error proc in
-      let _ = close_process proc in
-      Error msg)
-  | Error log -> Error log
+  let res =
+    match open_process cmd with
+    | Ok proc ->
+      (match Unix.waitpid (Pid.of_int proc.proc_pid) with
+      | Ok _ ->
+        let output = read_output proc ^ read_error proc in
+        let _ = close_process proc in
+        Ok output
+      | Error _ ->
+        let msg = read_error proc in
+        let _ = close_process proc in
+        Error msg)
+    | Error log -> Error log in
+  match res with
+  | Ok _ -> res
+  | Error log ->
+    Error
+      ("Detailed errors when running command:\n  "
+      ^ (String.concat ~sep:" " cmd ^ "\n")
+      ^ "----------------------------\n" ^ log)
 ;;
 
 let run_command_output_to_file (cmd : string list) (file : string)
@@ -162,6 +178,9 @@ let run_command_output_to_file (cmd : string list) (file : string)
   match Unix.waitpid pid with
   | Ok _ -> Ok ()
   | Error e ->
-    let err = string_of_sexp (Unix.Exit_or_signal.sexp_of_error e) in
-    Error err
+    let log = Unix.Exit_or_signal.to_string_hum (Error e) in
+    Error
+      ("Detailed errors when running command:\n  "
+      ^ (String.concat ~sep:" " cmd ^ "\n")
+      ^ "----------------------------\n" ^ log)
 ;;
