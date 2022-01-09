@@ -51,13 +51,13 @@ module String = struct
     String.concat ~sep strs
   ;;
 
-  let slice_from_pattern (s : string) ~(pattern : string) : string option =
+  let slice_from ~(pattern : string) (s : string) : string option =
     match String.substr_index s ~pattern with
     | Some idx -> Some (String.slice s idx (String.length s))
     | None -> None
   ;;
 
-  let find_line_contain (s : string) ~(pattern : string) : string option =
+  let find_line_contain ~(pattern : string) (s : string) : string option =
     let lines = String.split_lines s in
     List.find ~f:(String.is_substring ~substring:pattern) lines
   ;;
