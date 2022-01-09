@@ -21,6 +21,7 @@ module String : sig
   val replace_if_empty : string -> replacer:string -> string
   val concat_if_not_empty : string list -> sep:string -> string
   val slice_from : pattern:string -> string -> string option
+  val slice_to : pattern:string -> string -> string option
   val find_line_contain : pattern:string -> string -> string option
 
   (*** String formatting *)

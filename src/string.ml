@@ -51,9 +51,17 @@ module String = struct
     String.concat ~sep strs
   ;;
 
+  (** Slice from a string pattern (pattern is included) *)
   let slice_from ~(pattern : string) (s : string) : string option =
     match String.substr_index s ~pattern with
     | Some idx -> Some (String.slice s idx (String.length s))
+    | None -> None
+  ;;
+
+  (** Slice to a string pattern (pattern is not included) *)
+  let slice_to ~(pattern : string) (s : string) : string option =
+    match String.substr_index s ~pattern with
+    | Some idx -> Some (String.slice s 0 idx)
     | None -> None
   ;;
 
