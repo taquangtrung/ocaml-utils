@@ -57,6 +57,11 @@ module String = struct
     | None -> None
   ;;
 
+  let find_line_contain (s : string) ~(pattern : string) : string option =
+    let lines = String.split_lines s in
+    List.find ~f:(String.is_substring ~substring:pattern) lines
+  ;;
+
   (*-----------------------
    * Formatting string
    *----------------------*)
