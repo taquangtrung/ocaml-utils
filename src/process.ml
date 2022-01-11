@@ -161,7 +161,7 @@ let run_command_output_to_file (cmd : string list) (file : string)
     : (unit, string) result
   =
   let out_read, _ = Unix.pipe () in
-  let file_ds = Unix.openfile ~mode:[ Unix.O_CREAT; Unix.O_WRONLY ] file in
+  let file_ds = Unix.openfile ~mode:[ Unix.O_CREAT; Unix.O_WRONLY; Unix.O_TRUNC ] file in
   let pid =
     match Unix.fork () with
     | `In_the_child ->
