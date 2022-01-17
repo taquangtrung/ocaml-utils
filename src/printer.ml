@@ -179,10 +179,11 @@ let print_core
         | `None ->
           if not autoformat
           then msg
-          else if String.is_suffix ~suffix:"\n" prefix
-                  && String.not_empty (String.strip_newline prefix)
+          else if String.is_prefix ~prefix:"\n" msg
+                  || (String.length prefix > 1
+                     && String.is_suffix ~suffix:"\n" prefix)
           then (
-            let indent = String.count_indent prefix + 2 + indent in
+            let indent = String.count_indent prefix + indent in
             indicator ^ prefix ^ String.indent ~skipfirst:true indent msg)
           else if String.length prefix > 12 && String.is_infix ~infix:"\n" msg
           then
