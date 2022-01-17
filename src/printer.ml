@@ -95,11 +95,8 @@ let pr_items
   if List.is_empty xs
   then "[]"
   else (
-    let indent = String.length bullet + 1 in
-    let pr s =
-      let res = String.indent ~skipfirst:true indent s in
-      bullet ^ " " ^ res in
-    "\n" ^ pr_list ~sep ~obrace ~cbrace ~extra ~f:pr xs)
+    let pr_item s = bullet ^ " " ^ s in
+    "\n" ^ pr_list ~sep ~obrace ~cbrace ~extra ~f:pr_item xs)
 ;;
 
 let pr_args ~(f : 'a -> string) (args : 'a list) : string =
