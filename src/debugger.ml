@@ -5,7 +5,7 @@
  * Copyright (c) 2021 Ta Quang Trung.
  ********************************************************************)
 
-(* Printer module *)
+(* Debugger module *)
 open Core
 open Outils__String
 module FM = CamlinternalFormat
@@ -86,44 +86,13 @@ let debug_core
     ?(prefix = "")
     ?(indent = 0)
     ?(enable = true)
-    (print_msg : unit -> string)
+    (mk_msg : unit -> string)
   =
   if enable
   then (
-    let msg = print_msg () in
-    let indicator, indent =
-      if String.is_empty mtype
-      then "", indent
-      else "[" ^ mtype ^ "] ", indent + 2 in
     let msg =
-      if header
-      then (
-        let prefix = String.suffix_if_not_empty prefix ~suffix:"\n" in
-        "\n" ^ String.make 68 '*' ^ "\n" ^ indicator ^ prefix ^ msg)
-      else (
-        match ruler with
-        | `Long ->
-          let ruler = String.make 68 '*' ^ "\n" in
-          "\n" ^ ruler ^ "\n" ^ indicator ^ prefix ^ msg
-        | `Medium ->
-          let ruler = String.make 36 '*' in
-          "\n" ^ ruler ^ "\n" ^ indicator ^ prefix ^ msg
-        | `Short ->
-          let ruler = String.make 21 '-' in
-          "\n" ^ ruler ^ "\n" ^ indicator ^ prefix ^ msg
-        | `None ->
-          if String.is_prefix ~prefix:"\n" msg
-             || (String.length prefix > 1
-                && String.is_suffix ~suffix:"\n" prefix)
-          then (
-            let indent = String.count_indent prefix + indent in
-            indicator ^ prefix ^ String.indent ~skipfirst:true indent msg)
-          else if String.length prefix > 12 && String.is_infix ~infix:"\n" msg
-          then
-            indicator ^ prefix ^ "\n"
-            ^ String.indent ~skipfirst:false indent msg
-          else indicator ^ String.indent ~skipfirst:true indent (prefix ^ msg))
-    in
+      Printer.format_message ~mtype ~header ~ruler ~prefix ~indent
+        ~autoformat:true (mk_msg ()) in
     print_endline msg)
   else ()
 ;;
@@ -161,15 +130,14 @@ let debugp
     ?(indent = 0)
     ?(always = false)
     ?(enable = true)
-    (msg : string)
+    (prefix : string)
     (pr : 'a -> string)
     (data : 'a)
   =
   let enable =
     enable && (not !no_debug) && (!mode_debug || !mode_deep_debug || always)
   in
-  let printer () = pr data in
-  debug_core ~header ~ruler ~indent ~enable ~prefix:msg ~mtype printer
+  debug_core ~header ~ruler ~indent ~enable ~prefix ~mtype (fun () -> pr data)
 ;;
 
 (** Print debug message use format template similar to printf. *)
@@ -207,8 +175,7 @@ let ddebug
     : unit
   =
   let enable = enable && (not !no_debug) && (!mode_deep_debug || always) in
-  let printer () = msg in
-  debug_core ~header ~ruler ~indent ~enable ~prefix:msg ~mtype printer
+  debug_core ~header ~ruler ~indent ~enable ~prefix:msg ~mtype (fun () -> msg)
 ;;
 
 (** print a deep mode_debug message using a printer *)
@@ -219,13 +186,12 @@ let ddebugp
     ?(indent = 0)
     ?(always = false)
     ?(enable = true)
-    (msg : string)
+    (prefix : string)
     (pr : 'a -> string)
     (data : 'a)
   =
   let enable = enable && (not !no_debug) && (!mode_deep_debug || always) in
-  let printer () = pr data in
-  debug_core ~header ~ruler ~indent ~enable ~mtype ~prefix:msg printer
+  debug_core ~header ~ruler ~indent ~enable ~mtype ~prefix (fun () -> pr data)
 ;;
 
 (** print a deep mode_debug message *)

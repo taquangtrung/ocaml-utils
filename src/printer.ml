@@ -142,6 +142,44 @@ let beautiful_format_on_char ~(sep : char) ?(column = 80) (str : string) =
   beautiful_concat ~sep:(Char.to_string sep) ~column strs
 ;;
 
+let format_message
+    ?(mtype = "")
+    ?(header = false)
+    ?(ruler = `None)
+    ?(prefix = "")
+    ?(indent = 0)
+    ?(autoformat = true)
+    (msg : string)
+    : string
+  =
+  let indicator, indent =
+    if String.is_empty mtype
+    then "", indent
+    else "[" ^ mtype ^ "] ", indent + 2 in
+  if header
+  then (
+    let msg = if String.is_empty msg then msg else "\n\n" ^ msg ^ "\n" in
+    "\n" ^ String.make 68 '*' ^ "\n" ^ indicator ^ prefix ^ msg)
+  else (
+    match ruler with
+    | `Long -> "\n" ^ String.make 68 '*' ^ "\n" ^ indicator ^ prefix ^ msg
+    | `Medium -> "\n" ^ String.make 36 '=' ^ "\n" ^ indicator ^ prefix ^ msg
+    | `Short -> "\n" ^ String.make 21 '-' ^ "\n" ^ indicator ^ prefix ^ msg
+    | `None ->
+      if not autoformat
+      then msg
+      else if String.is_prefix ~prefix:"\n" msg
+              || (String.length prefix > 1
+                 && String.is_suffix ~suffix:"\n" prefix)
+      then (
+        let indent = String.count_indent prefix + indent in
+        indicator ^ prefix ^ String.indent ~skipfirst:true indent msg)
+      else if String.length prefix > 12 && String.is_infix ~infix:"\n" msg
+      then
+        indicator ^ prefix ^ "\n" ^ String.indent ~skipfirst:false indent msg
+      else indicator ^ String.indent ~skipfirst:true indent (prefix ^ msg))
+;;
+
 (*******************************************************************
  ** Stdout printing functions
  *******************************************************************)
@@ -156,40 +194,13 @@ let print_core
     ?(always = false)
     ?(enable = true)
     ?(autoformat = true)
-    msg
+    (msg : string)
     : unit
   =
   if ((not !no_print) && enable) || always
   then (
-    let indicator, indent =
-      if String.is_empty mtype
-      then "", indent
-      else "[" ^ mtype ^ "] ", indent + 2 in
     let msg =
-      if header
-      then (
-        let msg = if String.is_empty msg then msg else "\n\n" ^ msg ^ "\n" in
-        "\n" ^ String.make 68 '*' ^ "\n" ^ indicator ^ prefix ^ msg)
-      else (
-        match ruler with
-        | `Long -> "\n" ^ String.make 68 '*' ^ "\n" ^ indicator ^ prefix ^ msg
-        | `Medium ->
-          "\n" ^ String.make 36 '=' ^ "\n" ^ indicator ^ prefix ^ msg
-        | `Short -> "\n" ^ String.make 21 '-' ^ "\n" ^ indicator ^ prefix ^ msg
-        | `None ->
-          if not autoformat
-          then msg
-          else if String.is_prefix ~prefix:"\n" msg
-                  || (String.length prefix > 1
-                     && String.is_suffix ~suffix:"\n" prefix)
-          then (
-            let indent = String.count_indent prefix + indent in
-            indicator ^ prefix ^ String.indent ~skipfirst:true indent msg)
-          else if String.length prefix > 12 && String.is_infix ~infix:"\n" msg
-          then
-            indicator ^ prefix ^ "\n"
-            ^ String.indent ~skipfirst:false indent msg
-          else indicator ^ String.indent ~skipfirst:true indent (prefix ^ msg))
+      format_message ~mtype ~header ~ruler ~prefix ~indent ~autoformat msg
     in
     print_endline msg)
   else ()

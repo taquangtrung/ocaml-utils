@@ -74,6 +74,16 @@ val pr_pair : f1:('a -> string) -> f2:('b -> string) -> 'a * 'b -> string
 val beautiful_concat : ?column:int -> sep:string -> string list -> string
 val beautiful_format_on_char : sep:char -> ?column:int -> string -> string
 
+val format_message
+  :  ?mtype:string ->
+  ?header:bool ->
+  ?ruler:[< `Long | `Medium | `None | `Short > `None ] ->
+  ?prefix:string ->
+  ?indent:int ->
+  ?autoformat:bool ->
+  string ->
+  string
+
 (*** Printing ***)
 
 val print
